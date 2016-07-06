@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="WARN">
+    <appenders>
+        <Console name="Console" target="SYSTEM_OUT">
+            <PatternLayout
+                pattern="%d{HH:mm:ss.SSS} [%t] %-5level %logger{36} - %msg%n"/>
+        </Console>
+        <RollingFile name="ClassFiveFileAppender" fileName="../logs/application.log"
+                     filePattern="../classfive-logs/application-%d{MM-dd-yyyy}-%i.log">
+            <PatternLayout>
+                <pattern>%d{HH:mm:ss.SSS} [%t] %-5level %c{36} %l: %msg %n</pattern>
+            </PatternLayout>
+            <Policies>
+                <SizeBasedTriggeringPolicy size="10 MB" />
+            </Policies>
+            <DefaultRolloverStrategy min="1" max="4" />
+        </RollingFile>
+        <JDBC name="dbAppender" tableName="logs">
+            <ConnectionFactory class="src.main.java.com.vgorcinschi.classfive.util.ConnectionFactory" method="getDatabaseConnection" />
+            <Column name="EVENT_DATE" isEventTimestamp="true" />
+            <Column name="LOG_LEVEL" pattern="%level" />
+            <Column name="LOGGER" pattern="%logger" />
+            <Column name="MESSAGE" pattern="%message" />
+        </JDBC>
+    </appenders>
+    <loggers>
+        <root level="debug" additivity="false">
+            <appender-ref ref="Console" />
+             <appender-ref ref="dbAppender" />
+        </root>        
+        <logger name="src.main.java.com.vgorcinschi.classfive" 
+                level="warn" additivity="false">
+            <appender-ref ref="ClassFiveFileAppender" />
+            <appender-ref ref="Console"/>           
+        </logger>        
+    </loggers>
+</configuration>
